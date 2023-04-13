@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Config\QueryBuilder;
+use Exception;
 
 abstract class BaseModel
 {
@@ -15,9 +16,19 @@ abstract class BaseModel
         $this->qb = new QueryBuilder($table);
     }
 
+    public function setTable($table)
+    {
+        $this->table = $table;
+        $this->qb->setTable($table);
+    }
+
     public function getAll()
     {
-        return $this->qb->get();
+        if(!empty($this->qb->get())) {
+            return $this->qb->get();
+        }
+
+        throw new Exception("No record found", 404);
     }
 
     public function getById(int $id)
@@ -42,5 +53,20 @@ abstract class BaseModel
     {
         $id = $this->qb->delete($id);
         return $id;
+    }
+
+    public function beginTransaction()
+    {
+        $this->qb->beginTransaction();
+    }
+
+    public function commit()
+    {
+        $this->qb->commit();
+    }
+
+    public function rollback()
+    {
+        $this->qb->rollBack();
     }
 }

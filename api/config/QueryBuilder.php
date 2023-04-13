@@ -22,6 +22,11 @@ class QueryBuilder
         $this->table = $table;
     }
 
+    public function setTable($table)
+    {
+        $this->table = $table;
+    }
+
     public function select($fields = '*'): self
     {
         $this->select = is_array($fields) ? implode(',', $fields) : $fields;
@@ -122,5 +127,20 @@ class QueryBuilder
         } catch (PDOException $e) {
             die('ERROR: ' . $e->getMessage());
         }
+    }
+
+    public function beginTransaction()
+    {
+        $this->connection->beginTransaction();
+    }
+
+    public function commit()
+    {
+        $this->connection->commit();
+    }
+
+    public function rollback()
+    {
+        $this->connection->rollBack();
     }
 }

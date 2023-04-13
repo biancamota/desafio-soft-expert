@@ -56,29 +56,61 @@ class QueryBuilder
     private function buildQuery(): string
     {
         $query = "SELECT {$this->select} FROM {$this->table}";
-        
+
         if (!empty($this->joins)) {
             $query .= ' ' . implode(' ', $this->joins);
         }
-        
+
         if (!empty($this->where)) {
             $query .= ' WHERE ' . implode(' AND ', $this->where);
         }
-        
+
         if (!empty($this->orderBy)) {
             $query .= ' ORDER BY ' . $this->orderBy;
         }
-        
+
         if (!empty($this->limit)) {
             $query .= ' ' . $this->limit;
         }
-        
+
         return $query;
     }
 
     public function get()
     {
-       return $this->execute($this->buildQuery())->fetchAll(PDO::FETCH_ASSOC);
+        return $this->execute($this->buildQuery())->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function insert($values)
+    {
+        $fields = array_keys($values);
+        $binds  = array_pad([], count($fields), '?');
+
+        $query = 'INSERT INTO ' . $this->table . ' (' . implode(',', $fields) . ') VALUES (' . implode(',', $binds) . ')';
+
+        $this->execute($query, array_values($values));
+
+        return $this->connection->lastInsertId();
+    }
+
+    public function update($id, $values)
+    {
+        $fields = array_keys($values);
+
+        $query = 'UPDATE ' . $this->table . ' SET ' . implode('=?,', $fields) . '=? WHERE id =' . $id;
+
+        $this->execute($query, array_values($values));
+
+        return $id;
+    }
+
+    public function delete($id)
+    {
+        $query = 'DELETE FROM ' . $this->table . ' WHERE id = ' . $id;
+
+        $this->execute($query);
+
+        return $id;
     }
 
     public function execute($query, $params = [])

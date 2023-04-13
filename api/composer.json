@@ -13,9 +13,8 @@
         }
     },
     "require": {
-        "william-costa/dot-env": "^0.1.0",
-        "william-costa/database-manager": "^0.1.0",
         "firebase/php-jwt": "^6.4",
+        "coffeecode/router": "^2.0",
         "nikic/fast-route": "^1.3"
     },
     "require-dev": {

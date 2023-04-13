@@ -25,4 +25,22 @@ abstract class BaseModel
         $query = $this->qb->where('id', '=', $id);
         return $query->get();
     }
+
+    public function save(array $data)
+    {
+        $lastId = $this->qb->insert($data);
+        return $lastId;
+    }
+
+    public function update(int $id, array $data)
+    {
+        $response = $this->qb->update($id, $data);
+        return $response;
+    }
+
+    public function delete(int $id)
+    {
+        $id = $this->qb->delete($id);
+        return $id;
+    }
 }

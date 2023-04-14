@@ -15,16 +15,18 @@ class QueryBuilder
     protected $limit = '';
     protected $query = '';
     protected $orderBy = 'id DESC';
+    protected $groupBy = '';
+    protected $params = [];
 
-    public function __construct(string $table = null)
+    public function __construct()
     {
         $this->connection = (new Database())->connect();
-        $this->table = $table;
     }
 
     public function setTable($table)
     {
         $this->table = $table;
+        return $this;
     }
 
     public function select($fields = '*'): self
@@ -35,7 +37,8 @@ class QueryBuilder
 
     public function where(string $field, string $operator, string $value): self
     {
-        $this->where[] = "$field $operator $value";
+        $this->where[] = "$field $operator ?";
+        $this->params[] = $value;
 
         return $this;
     }
@@ -54,13 +57,39 @@ class QueryBuilder
 
     public function orderBy(string $field = 'id', string $order = 'DESC')
     {
-        $this->limit = "$field $order";
+        $this->orderBy = "$field $order";
         return $this;
     }
 
-    private function buildQuery(): string
+    public function groupBy(string $field)
     {
-        $query = "SELECT {$this->select} FROM {$this->table}";
+        $this->groupBy = "$field";
+        return $this;
+    }
+
+    public function first()
+    {
+        $this->limit(1, 0);
+
+        $result = $this->get();
+
+        return empty($result) ? null : $result[0];
+    }
+
+    public function find($id)
+    {
+        $this->where('id', '=', $id);
+
+        $result = $this->first();
+
+        return empty($result) ? null : $result;
+    }
+
+    private function buildQuery($select = null): string
+    {
+        $select = $select ?: $this->select;
+
+        $query = "SELECT $select FROM {$this->table}";
 
         if (!empty($this->joins)) {
             $query .= ' ' . implode(' ', $this->joins);
@@ -68,6 +97,10 @@ class QueryBuilder
 
         if (!empty($this->where)) {
             $query .= ' WHERE ' . implode(' AND ', $this->where);
+        }
+
+        if (!empty($this->groupBy)) {
+            $query .= ' GROUP BY ' . $this->groupBy;
         }
 
         if (!empty($this->orderBy)) {
@@ -83,7 +116,13 @@ class QueryBuilder
 
     public function get()
     {
-        return $this->execute($this->buildQuery())->fetchAll(PDO::FETCH_ASSOC);
+        $query = $this->buildQuery();
+        
+        $result = $this->execute($query, $this->params)->fetchAll(PDO::FETCH_ASSOC);
+        
+        $this->params = [];
+
+        return $result;
     }
 
     public function insert($values)
@@ -116,6 +155,15 @@ class QueryBuilder
         $this->execute($query);
 
         return $id;
+    }
+
+    public function deleteWhere($where)
+    {
+        $query = 'DELETE FROM ' . $this->table . ' WHERE ' . $where;
+
+        $this->execute($query);
+
+        return true;
     }
 
     public function execute($query, $params = [])

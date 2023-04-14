@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use App\Http\Response;
 use App\Models\PaymentMethods as ModelsPaymentMethods;
+use Exception;
 
 class PaymentMethods
 {
@@ -18,6 +19,10 @@ class PaymentMethods
     {
         try {
             $paymentMethods = $this->paymentMethodsModel->getAll();
+
+            if (empty($paymentMethods)) {
+                throw new Exception("No record found", 404);
+            }
 
             return new Response([
                 'success' => true,
@@ -37,6 +42,10 @@ class PaymentMethods
     {
         try {   
             $paymentMethod = $this->paymentMethodsModel->getById($id);
+
+            if (empty($paymentMethod)) {
+                throw new Exception("Payment method not found", 404);
+            }
             return new Response([
                 'success' => true,
                 'data' => [

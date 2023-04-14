@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use App\Http\Response;
 use App\Models\Category as ModelsCategory;
+use Exception;
 
 class Category
 {
@@ -18,6 +19,10 @@ class Category
     {
         try {
             $categories = $this->categoryModel->getAll();
+
+            if (empty($categories)) {
+                throw new Exception("No record found", 404);
+            }
 
             return new Response([
                 'success' => true,
@@ -37,6 +42,11 @@ class Category
     {
         try {   
             $category = $this->categoryModel->getById($id);
+
+            if (empty($category)) {
+                throw new Exception("Category not found", 404);
+            }
+
             return new Response([
                 'success' => true,
                 'data' => [

@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use App\Http\Response;
 use App\Models\Product as ModelsProduct;
+use Exception;
 
 class Product
 {
@@ -12,13 +13,17 @@ class Product
 
     public function __construct()
     {
-        $this->productModel = new ModelsProduct('products');
+        $this->productModel = new ModelsProduct();
     }
 
     public function getAll()
     {
         try {
             $products = $this->productModel->getAll();
+
+            if (empty($products)) {
+                throw new Exception("No record found", 404);
+            }
 
             return new Response([
                 'success' => true,
@@ -36,8 +41,13 @@ class Product
 
     public function getById(int $id)
     {
-        try {   
+        try {
             $product = $this->productModel->getById($id);
+
+            if (empty($product)) {
+                throw new Exception("Product not found", 404);
+            }
+
             return new Response([
                 'success' => true,
                 'data' => [
@@ -56,6 +66,10 @@ class Product
     {
         try {
             $id = $this->productModel->save((array) $request);
+
+            if (!$id) {
+                throw new Exception("Unable to save product. Please try again later or contact support", 500);
+            }
             return new Response([
                 'success' => true,
                 'data' => [

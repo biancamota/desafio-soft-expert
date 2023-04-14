@@ -6,14 +6,7 @@ use Exception;
 
 class Product extends BaseModel
 {
-    public function getById(int $id)
-    {
-        if (!empty(parent::getById($id))) {
-            return parent::update($id, self::getById($id));
-        }
-
-        throw new Exception("Product Not Found", 404);
-    }
+    protected $table = 'products';
 
     public function save(array $product)
     {

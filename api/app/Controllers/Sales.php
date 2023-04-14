@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use App\Http\Response;
 use App\Models\Sales as ModelsSales;
+use Exception;
 
 class Sales
 {
@@ -12,13 +13,17 @@ class Sales
 
     public function __construct()
     {
-       $this->saleModel = new ModelsSales('sales');
+        $this->saleModel = new ModelsSales('sales');
     }
 
     public function getAll()
     {
         try {
             $sales = $this->saleModel->getAll();
+
+            if (empty($sales)) {
+                throw new Exception("No record found", 404);
+            }
 
             return new Response([
                 'success' => true,
@@ -36,8 +41,13 @@ class Sales
 
     public function getById(int $id)
     {
-        try {   
+        try {
             $sale = $this->saleModel->getById($id);
+
+            if (empty($sale)) {
+                throw new Exception("Sale not found", 404);
+            }
+
             return new Response([
                 'success' => true,
                 'data' => [
@@ -56,6 +66,7 @@ class Sales
     {
         try {
             $id = $this->saleModel->save((array) $request);
+            
             return new Response([
                 'success' => true,
                 'data' => [

@@ -10,49 +10,35 @@ abstract class BaseModel
     protected $table;
     protected $qb;
 
-    public function __construct(string $table)
+    public function __construct()
     {
-        $this->table = $table;
-        $this->qb = new QueryBuilder($table);
-    }
-
-    public function setTable($table)
-    {
-        $this->table = $table;
-        $this->qb->setTable($table);
+        $this->qb = new QueryBuilder();
+        $this->qb->setTable($this->table);
     }
 
     public function getAll()
     {
-        if(!empty($this->qb->get())) {
-            return $this->qb->get();
-        }
-
-        throw new Exception("No record found", 404);
+        return $this->qb->get();
     }
 
     public function getById(int $id)
     {
-        $query = $this->qb->where('id', '=', $id);
-        return $query->get();
+        return $this->qb->where('id', '=', $id)->first();
     }
 
     public function save(array $data)
     {
-        $lastId = $this->qb->insert($data);
-        return $lastId;
+        return $this->qb->insert($data);
     }
 
     public function update(int $id, array $data)
     {
-        $response = $this->qb->update($id, $data);
-        return $response;
+        return $this->qb->update($id, $data);
     }
 
     public function delete(int $id)
     {
-        $id = $this->qb->delete($id);
-        return $id;
+        return $this->qb->delete($id);
     }
 
     public function beginTransaction()

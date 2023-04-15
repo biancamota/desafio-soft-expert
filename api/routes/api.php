@@ -17,4 +17,6 @@ return [
     ['POST', '/sales', [\App\Controllers\Sales::class, 'save']],
     ['PUT', '/sales/{id:\d+}', [\App\Controllers\Sales::class, 'update']],
     ['DELETE', '/sales/{id:\d+}', [\App\Controllers\Sales::class, 'delete']],
+    ['GET', '/auth/verify', [\App\Controllers\Auth::class, 'getById']],
+    ['POST', '/auth', [\App\Controllers\Auth::class, 'save']],
 ];

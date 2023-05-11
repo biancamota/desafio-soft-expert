@@ -11,9 +11,8 @@ class JWT
 {
     public static function validate()
     {
-        $authorization = $_SERVER['HTTP_AUTORIZATION'];
+        $authorization = $_SERVER['HTTP_AUTHORIZATION'];
         $key = Enviroment::getEnv('JWT_KEY');
-
         try {
             $token = str_replace('Bearer ', '', $authorization);
             $decode = JWTFirebase::decode($token, new Key($key, 'HS256'));

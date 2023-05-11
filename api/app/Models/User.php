@@ -6,12 +6,16 @@ use Exception;
 
 class User extends BaseModel
 {
-    public function getById(int $id)
+    protected $table = 'users';
+
+    public function getByEmail(string $email)
     {
-        if (!empty(parent::getById($id))) {
-            return parent::update($id, self::getById($id));
+        $user = $this->qb->where('email', '=', $email)->first();
+
+        if ($user) {
+            return $user;
         }
 
-        throw new Exception("User Not Found", 404);
+        return false;
     }
 }

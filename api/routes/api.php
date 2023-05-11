@@ -12,11 +12,12 @@ return [
     ['GET', '/payment-methods', [\App\Controllers\Category::class, 'getAll']],
     ['GET', '/payment-methods/{id:\d+}', [\App\Controllers\Category::class, 'getById']],
     ['GET', '/user/{id:\d+}', [\App\Controllers\User::class, 'getById']],
+    ['POST', '/user', [\App\Controllers\User::class, 'save']],
     ['GET', '/sales', [\App\Controllers\Sales::class, 'getAll']],
     ['GET', '/sales/{id:\d+}', [\App\Controllers\Sales::class, 'getById']],
     ['POST', '/sales', [\App\Controllers\Sales::class, 'save']],
     ['PUT', '/sales/{id:\d+}', [\App\Controllers\Sales::class, 'update']],
     ['DELETE', '/sales/{id:\d+}', [\App\Controllers\Sales::class, 'delete']],
-    ['GET', '/auth/verify', [\App\Controllers\Auth::class, 'getById']],
-    ['POST', '/auth', [\App\Controllers\Auth::class, 'save']],
+    ['GET', '/auth/verify', [\App\Controllers\Auth::class, 'verify']],
+    ['POST', '/auth', [\App\Controllers\Auth::class, 'auth']]
 ];

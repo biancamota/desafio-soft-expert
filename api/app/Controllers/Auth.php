@@ -3,15 +3,17 @@
 namespace App\Controllers;
 
 use App\Http\Response;
+use App\Models\User;
 use App\Services\JWT;
+use Firebase\JWT\JWT as JWTJWT;
 
 class Auth
 {
     public function auth($request)
     {
-        //buscar user por email
-        $user = false;
-
+        $userModel = new User();
+        $user = $userModel->getByEmail(strip_tags($request->email));
+        
         if (!$user) {
             return new Response([
                 'error' => 401,
@@ -19,7 +21,7 @@ class Auth
             ], 401);
         }
 
-        if (!password_verify($request->password, $user->password)) {
+        if (!password_verify(strip_tags($request->password), $user['password'])) {
             return new Response([
                 'error' => 401,
                 'message' => 'Not authorized'
@@ -30,7 +32,13 @@ class Auth
 
         return new Response([
             'token' => $token,
-            'user' => $user->name
+            'user' => $user['name'],
+            'message' => 'LoggedIn'
         ]);
+    }
+
+    public function verify()
+    {
+        return JWT::validate();
     }
 }

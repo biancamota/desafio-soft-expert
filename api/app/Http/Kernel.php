@@ -24,14 +24,22 @@ class Kernel
             $request->getMethod(),
             $request->getPathInfo()
         );
-        
+
         [$statusCode, [$controller, $method], $vars] = $routeInfo;
 
         switch ($statusCode) {
             case Dispatcher::NOT_FOUND:
-                return (new Response())->getErros(404);
+                return new Response([
+                    'error' => 404,
+                    'message' => 'NOT_FOUND'
+                ], 200);
+                break;
             case Dispatcher::METHOD_NOT_ALLOWED:
-                return (new Response())->getErros(405);
+                return new Response([
+                    'error' => 405,
+                    'message' => "METHOD_NOT_ALLOWED"
+                ], 200);
+                break;
             case Dispatcher::FOUND:
                 $args = in_array($request->getMethod(), ['POST', 'PUT']) ? [json_decode(file_get_contents('php://input')), $vars] : $vars;
                 $response = call_user_func_array([new $controller, $method], $args);

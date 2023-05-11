@@ -1,0 +1,514 @@
+--
+-- PostgreSQL database dump
+--
+
+-- Dumped from database version 12.14 (Ubuntu 12.14-0ubuntu0.20.04.1)
+-- Dumped by pg_dump version 12.14 (Ubuntu 12.14-0ubuntu0.20.04.1)
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET idle_in_transaction_session_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
+SET check_function_bodies = false;
+SET xmloption = content;
+SET client_min_messages = warning;
+SET row_security = off;
+
+SET default_tablespace = '';
+
+SET default_table_access_method = heap;
+
+--
+-- Name: categories; Type: TABLE; Schema: public; Owner: biamota
+--
+
+CREATE TABLE public.categories (
+    id integer NOT NULL,
+    name character varying(100) NOT NULL
+);
+
+
+ALTER TABLE public.categories OWNER TO biamota;
+
+--
+-- Name: categories_id_seq; Type: SEQUENCE; Schema: public; Owner: biamota
+--
+
+CREATE SEQUENCE public.categories_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.categories_id_seq OWNER TO biamota;
+
+--
+-- Name: categories_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: biamota
+--
+
+ALTER SEQUENCE public.categories_id_seq OWNED BY public.categories.id;
+
+
+--
+-- Name: payment_methods; Type: TABLE; Schema: public; Owner: biamota
+--
+
+CREATE TABLE public.payment_methods (
+    id integer NOT NULL,
+    name character varying(100) NOT NULL
+);
+
+
+ALTER TABLE public.payment_methods OWNER TO biamota;
+
+--
+-- Name: payment_methods_id_seq; Type: SEQUENCE; Schema: public; Owner: biamota
+--
+
+CREATE SEQUENCE public.payment_methods_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.payment_methods_id_seq OWNER TO biamota;
+
+--
+-- Name: payment_methods_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: biamota
+--
+
+ALTER SEQUENCE public.payment_methods_id_seq OWNED BY public.payment_methods.id;
+
+
+--
+-- Name: products; Type: TABLE; Schema: public; Owner: biamota
+--
+
+CREATE TABLE public.products (
+    id integer NOT NULL,
+    name character varying(255) NOT NULL,
+    description text,
+    category_id integer NOT NULL,
+    purchase_price numeric(10,2),
+    sale_price numeric(10,2),
+    tax_value numeric(10,2),
+    created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
+    deleted_at timestamp without time zone
+);
+
+
+ALTER TABLE public.products OWNER TO biamota;
+
+--
+-- Name: products_id_seq; Type: SEQUENCE; Schema: public; Owner: biamota
+--
+
+CREATE SEQUENCE public.products_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.products_id_seq OWNER TO biamota;
+
+--
+-- Name: products_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: biamota
+--
+
+ALTER SEQUENCE public.products_id_seq OWNED BY public.products.id;
+
+
+--
+-- Name: sale_items; Type: TABLE; Schema: public; Owner: biamota
+--
+
+CREATE TABLE public.sale_items (
+    id integer NOT NULL,
+    sale_id integer NOT NULL,
+    product_id integer NOT NULL,
+    quantity integer NOT NULL,
+    price numeric(10,2)
+);
+
+
+ALTER TABLE public.sale_items OWNER TO biamota;
+
+--
+-- Name: sale_items_id_seq; Type: SEQUENCE; Schema: public; Owner: biamota
+--
+
+CREATE SEQUENCE public.sale_items_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.sale_items_id_seq OWNER TO biamota;
+
+--
+-- Name: sale_items_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: biamota
+--
+
+ALTER SEQUENCE public.sale_items_id_seq OWNED BY public.sale_items.id;
+
+
+--
+-- Name: sales; Type: TABLE; Schema: public; Owner: biamota
+--
+
+CREATE TABLE public.sales (
+    id integer NOT NULL,
+    payment_method_id integer NOT NULL,
+    total_amount numeric(10,2),
+    total_taxes numeric(10,2),
+    created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
+    deleted_at timestamp without time zone
+);
+
+
+ALTER TABLE public.sales OWNER TO biamota;
+
+--
+-- Name: sales_id_seq; Type: SEQUENCE; Schema: public; Owner: biamota
+--
+
+CREATE SEQUENCE public.sales_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.sales_id_seq OWNER TO biamota;
+
+--
+-- Name: sales_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: biamota
+--
+
+ALTER SEQUENCE public.sales_id_seq OWNED BY public.sales.id;
+
+
+--
+-- Name: users; Type: TABLE; Schema: public; Owner: biamota
+--
+
+CREATE TABLE public.users (
+    id integer NOT NULL,
+    name character varying(100) NOT NULL,
+    email character varying(100) NOT NULL,
+    password text NOT NULL,
+    created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
+    updated_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
+    deleted_at timestamp without time zone
+);
+
+
+ALTER TABLE public.users OWNER TO biamota;
+
+--
+-- Name: users_id_seq; Type: SEQUENCE; Schema: public; Owner: biamota
+--
+
+CREATE SEQUENCE public.users_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.users_id_seq OWNER TO biamota;
+
+--
+-- Name: users_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: biamota
+--
+
+ALTER SEQUENCE public.users_id_seq OWNED BY public.users.id;
+
+
+--
+-- Name: categories id; Type: DEFAULT; Schema: public; Owner: biamota
+--
+
+ALTER TABLE ONLY public.categories ALTER COLUMN id SET DEFAULT nextval('public.categories_id_seq'::regclass);
+
+
+--
+-- Name: payment_methods id; Type: DEFAULT; Schema: public; Owner: biamota
+--
+
+ALTER TABLE ONLY public.payment_methods ALTER COLUMN id SET DEFAULT nextval('public.payment_methods_id_seq'::regclass);
+
+
+--
+-- Name: products id; Type: DEFAULT; Schema: public; Owner: biamota
+--
+
+ALTER TABLE ONLY public.products ALTER COLUMN id SET DEFAULT nextval('public.products_id_seq'::regclass);
+
+
+--
+-- Name: sale_items id; Type: DEFAULT; Schema: public; Owner: biamota
+--
+
+ALTER TABLE ONLY public.sale_items ALTER COLUMN id SET DEFAULT nextval('public.sale_items_id_seq'::regclass);
+
+
+--
+-- Name: sales id; Type: DEFAULT; Schema: public; Owner: biamota
+--
+
+ALTER TABLE ONLY public.sales ALTER COLUMN id SET DEFAULT nextval('public.sales_id_seq'::regclass);
+
+
+--
+-- Name: users id; Type: DEFAULT; Schema: public; Owner: biamota
+--
+
+ALTER TABLE ONLY public.users ALTER COLUMN id SET DEFAULT nextval('public.users_id_seq'::regclass);
+
+
+--
+-- Data for Name: categories; Type: TABLE DATA; Schema: public; Owner: biamota
+--
+
+COPY public.categories (id, name) FROM stdin;
+1       Electronics
+2       Fashion
+3       Sports
+\.
+
+
+--
+-- Data for Name: payment_methods; Type: TABLE DATA; Schema: public; Owner: biamota
+--
+
+COPY public.payment_methods (id, name) FROM stdin;
+1       Credit Card
+2       Debit Card
+3       Cash
+4       Pix
+\.
+
+
+--
+-- Data for Name: products; Type: TABLE DATA; Schema: public; Owner: biamota
+--
+
+COPY public.products (id, name, description, category_id, purchase_price, sale_price, tax_value, created_at, deleted_at) FROM stdin;
+5       Smartphone X    The latest smartphone with OLED screen and 64MP camera  1       800.00  1200.00 120.00  2023-04-12 22:36:23.59493       \N
+6       Smartphone X    The latest smartphone with OLED screen and 64MP camera  1       800.00  1200.00 120.00  2023-04-12 22:36:28.50444       \N
+7       T-shirt Z       Basic cotton t-shirt    2       15.00   30.00   3.00    2023-04-12 22:39:15.007951      \N
+8       T-shirt Z       Basic cotton t-shirt    2       15.00   30.00   3.00    2023-04-12 22:39:19.275013      \N
+9       Soccer Ball V   Official FIFA soccer ball       3       80.00   120.00  12.00   2023-04-12 22:39:49.883577      \N
+10      Soccer Ball V   Official FIFA soccer ball       3       80.00   120.00  12.00   2023-04-12 22:39:51.649998      \N
+11      Laptop Y        The most powerful laptop with i9 processor and RTX 3080 graphics card   1       2500.00 4000.00 400.00  2023-04-12 22:41:42.067322  \N
+12      Jeans W Skinny jeans with dark wash     2       50.00   90.00   9.00    2023-04-12 22:41:53.235274      \N
+13      Tennis Racket U Professional carbon tennis racket       3       200.00  350.00  35.00   2023-04-12 22:42:07.84455       \N
+14      Tennis Racket U Professional carbon tennis racket       3       200.00  350.00  35.00   2023-04-12 22:43:55.70386       \N
+16      Tennis Racket U Professional carbon tennis racket       3       200.00  350.00  35.00   2023-04-13 08:27:22.58071       \N
+18      CROCODILO       Professional carbon tennis racket       3       200.00  350.00  35.00   2023-04-14 01:40:29.725358      \N
+\.
+
+
+--
+-- Data for Name: sale_items; Type: TABLE DATA; Schema: public; Owner: biamota
+--
+
+COPY public.sale_items (id, sale_id, product_id, quantity, price) FROM stdin;
+4       9       5       2       50.00
+5       9       9       3       25.00
+6       10      5       2       50.00
+7       10      9       3       25.00
+8       10      12      2       30.00
+12      14      16      2       50.00
+13      14      8       3       25.00
+14      14      12      2       30.00
+15      15      16      2       50.00
+16      15      12      3       25.00
+17      15      12      2       30.00
+18      16      16      2       50.00
+19      16      12      3       25.00
+20      16      12      2       30.00
+21      18      16      2       50.00
+22      18      12      3       25.00
+23      18      12      2       30.00
+27      19      5       2       50.30
+28      19      9       3       25.99
+\.
+
+
+--
+-- Data for Name: sales; Type: TABLE DATA; Schema: public; Owner: biamota
+--
+
+COPY public.sales (id, payment_method_id, total_amount, total_taxes, created_at, deleted_at) FROM stdin;
+9       2       250.00  35.00   2023-04-13 13:21:21.775902      \N
+10      1       250.00  35.00   2023-04-13 18:36:37.947079      \N
+14      1       250.00  35.00   2023-04-13 18:40:10.966984      \N
+15      1       250.00  35.00   2023-04-13 23:25:37.16836       \N
+16      1       250.00  35.00   2023-04-13 23:25:43.109514      \N
+18      1       250.00  35.00   2023-04-14 02:51:59.208689      \N
+19      2       250.00  35.00   2023-04-14 02:52:02.752053      \N
+\.
+
+
+--
+-- Data for Name: users; Type: TABLE DATA; Schema: public; Owner: biamota
+--
+
+COPY public.users (id, name, email, password, created_at, updated_at, deleted_at) FROM stdin;
+3       BMDev   bmdev@gmail.com $2y$10$QQTNc/DIsmuFq0k1CXEzB.CnPwAhbZ8JrV6JG46xULDUgrshcUisS    2023-04-17 01:17:49.146641      2023-04-17 01:17:49.146641  \N
+\.
+
+
+--
+-- Name: categories_id_seq; Type: SEQUENCE SET; Schema: public; Owner: biamota
+--
+
+SELECT pg_catalog.setval('public.categories_id_seq', 3, true);
+
+
+--
+-- Name: payment_methods_id_seq; Type: SEQUENCE SET; Schema: public; Owner: biamota
+--
+
+SELECT pg_catalog.setval('public.payment_methods_id_seq', 4, true);
+
+
+--
+-- Name: products_id_seq; Type: SEQUENCE SET; Schema: public; Owner: biamota
+--
+
+SELECT pg_catalog.setval('public.products_id_seq', 20, true);
+
+
+--
+-- Name: sale_items_id_seq; Type: SEQUENCE SET; Schema: public; Owner: biamota
+--
+
+SELECT pg_catalog.setval('public.sale_items_id_seq', 28, true);
+
+
+--
+-- Name: sales_id_seq; Type: SEQUENCE SET; Schema: public; Owner: biamota
+--
+
+SELECT pg_catalog.setval('public.sales_id_seq', 19, true);
+
+
+--
+-- Name: users_id_seq; Type: SEQUENCE SET; Schema: public; Owner: biamota
+--
+
+SELECT pg_catalog.setval('public.users_id_seq', 3, true);
+
+
+--
+-- Name: categories categories_pkey; Type: CONSTRAINT; Schema: public; Owner: biamota
+--
+
+ALTER TABLE ONLY public.categories
+    ADD CONSTRAINT categories_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: payment_methods payment_methods_pkey; Type: CONSTRAINT; Schema: public; Owner: biamota
+--
+
+ALTER TABLE ONLY public.payment_methods
+    ADD CONSTRAINT payment_methods_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: products products_pkey; Type: CONSTRAINT; Schema: public; Owner: biamota
+--
+
+ALTER TABLE ONLY public.products
+    ADD CONSTRAINT products_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: sale_items sale_items_pkey; Type: CONSTRAINT; Schema: public; Owner: biamota
+--
+
+ALTER TABLE ONLY public.sale_items
+    ADD CONSTRAINT sale_items_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: sales sales_pkey; Type: CONSTRAINT; Schema: public; Owner: biamota
+--
+
+ALTER TABLE ONLY public.sales
+    ADD CONSTRAINT sales_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: users users_email_key; Type: CONSTRAINT; Schema: public; Owner: biamota
+--
+
+ALTER TABLE ONLY public.users
+    ADD CONSTRAINT users_email_key UNIQUE (email);
+
+
+--
+-- Name: users users_pkey; Type: CONSTRAINT; Schema: public; Owner: biamota
+--
+
+ALTER TABLE ONLY public.users
+    ADD CONSTRAINT users_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: products products_category_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: biamota
+--
+
+ALTER TABLE ONLY public.products
+    ADD CONSTRAINT products_category_id_fkey FOREIGN KEY (category_id) REFERENCES public.categories(id);
+
+
+--
+-- Name: sale_items sale_items_product_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: biamota
+--
+
+ALTER TABLE ONLY public.sale_items
+    ADD CONSTRAINT sale_items_product_id_fkey FOREIGN KEY (product_id) REFERENCES public.products(id);
+
+
+--
+-- Name: sale_items sale_items_sale_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: biamota
+--
+
+ALTER TABLE ONLY public.sale_items
+    ADD CONSTRAINT sale_items_sale_id_fkey FOREIGN KEY (sale_id) REFERENCES public.sales(id);
+
+
+--
+-- Name: sales sales_payment_method_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: biamota
+--
+
+ALTER TABLE ONLY public.sales
+    ADD CONSTRAINT sales_payment_method_id_fkey FOREIGN KEY (payment_method_id) REFERENCES public.payment_methods(id);
+
+
+--
+-- PostgreSQL database dump complete
+--

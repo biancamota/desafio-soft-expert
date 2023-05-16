@@ -46,3 +46,28 @@ The API will be available at: http://localhost:3000/
    yarn build
 ```
 This will generate an optimized version of the project in the dist/ folder.
+
+## API Routes
+#### `GET` /products: Returns a list of all products in the database.
+#### `GET` /products/:id: Returns product in the database.
+#### `POST` /products: Adds a new product to the database.
+| Parameter   | Type       |                            |
+| :---------- | :--------- | :---------------------------------- |
+| `name` | `string` | **Required**. |
+| `description` | `string` |  |
+| `category_id` | `string` | **Required**. |
+| `purchase_price` | `string` |  |
+| `sale_price` | `string` | |
+| `tax_value` | `string` |  |
+
+#### `PUT` /products/:id: Updates an existing product in the database. Required parameters: id.
+| Parameter   | Type       |                            |
+| :---------- | :--------- | :---------------------------------- |
+| `name` | `string` | **Required**. |
+| `description` | `string` |  |
+| `category_id` | `string` | **Required**. |
+| `purchase_price` | `string` |  |
+| `sale_price` | `string` | |
+| `tax_value` | `string` |  |
+
+#### `DELETE` /products/:id: Deletes a product from the database. Required parameters: id.
